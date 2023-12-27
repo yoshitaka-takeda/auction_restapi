@@ -1,60 +1,59 @@
-// Tidying-up
-// var createError = require('http-errors');
-import * as errors from 'http-errors';
-const e = errors();
-
-// var express = require('express');
-import fastify from "fastify";
-import * as dotenv from "dotenv";
-import pino from "pinojs";
-import * as cors from "@fastify/cors";
+//Rewrite loc instead of tidying-up
+import dotenv from './configs/environment.mjs';
+import * as dbs from './configs/dbs.mjs';
+import fastify from 'fastify';
+import cors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
+import { routes } from './routes/routes.mjs';
+import fs from 'fs';
+import * as fsextra from 'fs-extra';
+import path from 'node:path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import pino from 'pino';
 
 dotenv.config();
-
-// var path = require('path');
-// var cookieParser = require('cookie-parser');
-// var logger = require('morgan');
-import path from 'path';
-import cookieParser from 'cookie-parser';
-
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
-
-// var app = express();
-try{
-  const app = fastify();
-  app.use(cors);
-
-  // view engine setup
-  // app.set('views', path.join(__dirname, 'views'));
-  // app.set('view engine', 'pug');
-
-  // app.use(logger('dev'));
-  // app.use(express.json());
-  // app.use(express.urlencoded({ extended: false }));
-  app.use(cookieParser());
-  app.use(express.static(path.join(__dirname, 'public')));
-
-  app.use('/', indexRouter);
-  app.use('/users', usersRouter);
-
-  // catch 404 and forward to error handler
-  app.use(function(req, res, next) {
-    next(createError(404));
-  });
-
-  // error handler
-  app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-  });
-}catch(e){
-  throw new error(e);
+const __db = dbs;
+let app;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const __publicPrefix = "public";
+if (fs.existsSync(__dirname + `/${__publicPrefix}`)) {
+    console.log('The directory exists');
+} else {
+    console.log('The directory does NOT exist');
 }
 
-module.exports = app;
+try {
+    app = fastify({logger: true});
+    // console.log(app);
+    __db.dbpool();
+    
+    // console.log(fs);
+    // console.log(fsextra);
+    // console.log(cors);
+    app.register(fastifyStatic,{
+        root: path.join(__dirname, 'public'),
+        prefix: `/${__publicPrefix}/`, // optional: default '/'
+        index: false,
+        list: false,
+        constraints: { }, //{ host: 'example.com' } // optional: default {}
+        handler: (request,reply) => {
+            console.log(request);
+            reply.status(403).send({message: "beep"});
+        }
+    });
+    await app.register(cors,{
+        hook: "preHandler",
+        
+    });
+    app.register(routes);
+
+    app.listen({port: process.env.APP_PORT}, function (err,address) {
+        if(err) {
+            throw err;
+            process.exit(1);
+        }
+    });
+}catch(err){
+    console.log(err);
+}

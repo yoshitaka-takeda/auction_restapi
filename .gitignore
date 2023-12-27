@@ -63,3 +63,5 @@ typings/
 # Ignore all environment files
 .env*
 
+# Custom path to be skipped
+prev/
