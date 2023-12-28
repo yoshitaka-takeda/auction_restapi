@@ -4,7 +4,7 @@ import * as dbs from './configs/dbs.mjs';
 import fastify from 'fastify';
 import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
-import { routes } from './routes/routes.mjs';
+import { checkFront, routes } from './routes/routes.mjs';
 import fs from 'fs';
 import * as fsextra from 'fs-extra';
 import path from 'node:path';
@@ -17,20 +17,26 @@ const __db = dbs;
 let app;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const __publicPrefix = "public";
+const __loggerPrefix = process.env.PINO_LOGDIR;
 if (fs.existsSync(__dirname + `/${__publicPrefix}`)) {
-    console.log('The directory exists');
+    console.log(`The directory /${__publicPrefix} exists`);
 } else {
-    console.log('The directory does NOT exist');
+    console.log(`The directory /${__publicPrefix} does NOT exist`);
+}
+
+if (fs.existsSync(__dirname + `/${__loggerPrefix}`)) {
+    console.log(`The directory /${__loggerPrefix} exists`);
+} else {
+    console.log(`The directory /${__loggerPrefix} does NOT exist`);
+    fs.mkdirSync(__dirname + `/${__loggerPrefix}`,{recursive: true});
 }
 
 try {
-    app = fastify({logger: true});
-    // console.log(app);
+    app = fastify({
+        logger: true
+    });
     __db.dbpool();
     
-    // console.log(fs);
-    // console.log(fsextra);
-    // console.log(cors);
     app.register(fastifyStatic,{
         root: path.join(__dirname, 'public'),
         prefix: `/${__publicPrefix}/`, // optional: default '/'
@@ -39,14 +45,18 @@ try {
         constraints: { }, //{ host: 'example.com' } // optional: default {}
         handler: (request,reply) => {
             console.log(request);
-            reply.status(403).send({message: "beep"});
+            reply.status(403).send({message: "beep!"});
         }
     });
-    await app.register(cors,{
-        hook: "preHandler",
-        
-    });
+
+    console.log(checkFront(''));
     app.register(routes);
+
+    await app.register(cors,{
+        hook: 'preHandler',
+        methods: 'CONNECT,GET,HEAD,OPTIONS,PATCH,POST,PUT',
+        preflight : false,
+    });
 
     app.listen({port: process.env.APP_PORT}, function (err,address) {
         if(err) {
