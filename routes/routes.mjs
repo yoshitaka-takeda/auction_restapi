@@ -22,8 +22,10 @@ export async function routes(fastify=f, options=null) {
                         `(GET|OPTIONS) '/'`,
                         `(GET|POST) '/login'`,
                         `(GET|POST) '/logout'`,
-                        `(POST|PUT) '/register'`,
+                        `(GET|POST|PUT) '/register'`,
                         `(POST) '/listUser'`,
+                        `(GET|POST) '/getUser'`,
+                        `(GET|PATCH) '/updateUser'`
                         `(POST|OPTIONS) '/listAuction'`,
                         `(PUT) '/createAuction'`,
                         `(GET|PATCH) '/editAuction'`,
@@ -132,6 +134,30 @@ export async function routes(fastify=f, options=null) {
         try {
             reply.status(200).send({
                 
+            });
+        }catch(err){
+            reply.statusCode(400).send({
+                message: `${err}`
+            })
+        }
+    });
+
+    fastify.put("/register",options, async (request,reply) => {
+        try {
+            reply.status(200).send({
+                
+            });
+        }catch(err){
+            reply.statusCode(400).send({
+                message: `${err}`
+            })
+        }
+    });
+
+    fastify.post("/listUser",options, async (request,reply) => {
+        try {
+            reply.status(200).send({
+                message: '',
             });
         }catch(err){
             reply.statusCode(400).send({
