@@ -1,5 +1,5 @@
 import fastify from "fastify";
-import fastifyRawBody from "fastify-raw-body";
+// import fastifyRawBody from "fastify-raw-body";
 import dotenv from "../configs/environment.mjs";
 
 dotenv.config();
@@ -233,7 +233,7 @@ export async function routes(fastify=f, options=null) {
         try {
             reply.status(200).send({
                 data: {
-                    
+
                 },
             });
         }catch(err){

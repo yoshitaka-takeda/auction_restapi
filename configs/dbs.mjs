@@ -1,6 +1,12 @@
-import * as dotenv from 'dotenv';
+import dotenv from "../configs/environment.mjs";
 import mariadb from 'mariadb';
 import pkg from 'pg';
+// import * as knex from 'knex';
+
+// export const knex = knex({
+//     client: 'mariadb',
+// });
+
 const {Client} = pkg;
 
 dotenv.config();
