@@ -1,4 +1,5 @@
 import fastify from "fastify";
+import fastifyRawBody from "fastify-raw-body";
 import dotenv from "../configs/environment.mjs";
 
 dotenv.config();
@@ -10,9 +11,11 @@ const options = {
 };
 
 export async function routes(fastify=f, options=null) {
+
     fastify.get("/",options, async (request,reply) => {
         console.log(request);
-        console.log(reply);
+        // console.log(reply);
+        
         try {
             reply.status(200).send({
                 message: { 
@@ -25,7 +28,7 @@ export async function routes(fastify=f, options=null) {
                         `(GET|POST|PUT) '/register'`,
                         `(POST) '/listUser'`,
                         `(GET|POST) '/getUser'`,
-                        `(GET|PATCH) '/updateUser'`
+                        `(GET|PATCH) '/updateUser'`,
                         `(POST|OPTIONS) '/listAuction'`,
                         `(PUT) '/createAuction'`,
                         `(GET|PATCH) '/editAuction'`,
@@ -43,11 +46,12 @@ export async function routes(fastify=f, options=null) {
     fastify.options("/", options, async (request, reply, next) => {
         try {
             console.log(request);
-            reply.status(200).send({
-                message: [
-                    "x"
-                ]
-            });
+            console.info(request.body);
+            console.info(request.query);
+            const response = request.body;
+            reply.status(200).send(
+                response
+            );
         }catch(err){
             reply.status(400).send({
                 message: `${err}`
