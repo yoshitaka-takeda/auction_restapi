@@ -32,7 +32,7 @@ export async function routes(fastify=f, options=null) {
                         `(GET|POST|OPTIONS) '/listAuction'`,
                         `(GET|PUT) '/createAuction'`,
                         `(GET|PATCH) '/editAuction'`,
-                        `(GET|PATCH) '/bidAuction'`
+                        `(GET|PUT|PATCH) '/bidAuction'`
                     ]
                 }
             });
@@ -88,7 +88,9 @@ export async function routes(fastify=f, options=null) {
     fastify.post("/login",options, async (request,reply) => {
         try {
             reply.status(200).send({
-                
+                data: {
+
+                }
             });
         }catch(err){
             reply.statusCode(400).send({
@@ -119,7 +121,9 @@ export async function routes(fastify=f, options=null) {
     fastify.post("/logout",options, async (request,reply) => {
         try {
             reply.status(200).send({
-                
+                data: {
+
+                }
             });
         }catch(err){
             reply.statusCode(400).send({
@@ -151,7 +155,9 @@ export async function routes(fastify=f, options=null) {
     fastify.post("/register",options, async (request,reply) => {
         try {
             reply.status(200).send({
-                
+                data: {
+
+                }
             });
         }catch(err){
             reply.statusCode(400).send({
@@ -163,7 +169,9 @@ export async function routes(fastify=f, options=null) {
     fastify.put("/register",options, async (request,reply) => {
         try {
             reply.status(200).send({
-                
+                data: {
+
+                }
             });
         }catch(err){
             reply.statusCode(400).send({
@@ -190,7 +198,43 @@ export async function routes(fastify=f, options=null) {
     fastify.post("/listUser",options, async (request,reply) => {
         try {
             reply.status(200).send({
-                message: '',
+                data: {
+
+                },
+            });
+        }catch(err){
+            reply.statusCode(400).send({
+                message: `${err}`
+            })
+        }
+    });
+
+    fastify.get("/getUser",options, async (request,reply) => {
+        try {
+            reply.status(200).send({
+                message: {
+                    METHOD: 'POST',
+                    REQUIRED: 'Key-Header, Body (JSON)',
+                    Body: {
+                        id: '',
+                        username: '',
+                        session_id: ''
+                    }
+                }
+            });
+        }catch(err){
+            reply.statusCode(400).send({
+                message: `${err}`
+            })
+        }
+    });
+
+    fastify.post("/getUser",options, async (request,reply) => {
+        try {
+            reply.status(200).send({
+                data: {
+                    
+                },
             });
         }catch(err){
             reply.statusCode(400).send({
