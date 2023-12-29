@@ -13,24 +13,24 @@ const options = {
 export async function routes(fastify=f, options=null) {
 
     fastify.get("/",options, async (request,reply) => {
-        console.log(request);
+        // console.log(request);
         // console.log(reply);
         
         try {
             reply.status(200).send({
                 message: { 
                     path: `${ request.method } '/'`,
-                    method: `'GET','POST','PUT','PATCH','CONNECT','HEAD','OPTIONS'`,
+                    methods: `'GET','POST','PUT','PATCH','CONNECT','HEAD','OPTIONS'`,
                     routes: [
                         `(GET|OPTIONS) '/'`,
                         `(GET|POST) '/login'`,
                         `(GET|POST) '/logout'`,
                         `(GET|POST|PUT) '/register'`,
-                        `(POST) '/listUser'`,
+                        `(GET|POST) '/listUser'`,
                         `(GET|POST) '/getUser'`,
                         `(GET|PATCH) '/updateUser'`,
-                        `(POST|OPTIONS) '/listAuction'`,
-                        `(PUT) '/createAuction'`,
+                        `(GET|POST|OPTIONS) '/listAuction'`,
+                        `(GET|PUT) '/createAuction'`,
                         `(GET|PATCH) '/editAuction'`,
                         `(GET|PATCH) '/bidAuction'`
                     ]
@@ -45,13 +45,20 @@ export async function routes(fastify=f, options=null) {
 
     fastify.options("/", options, async (request, reply, next) => {
         try {
-            console.log(request);
-            console.info(request.body);
-            console.info(request.query);
+            // console.log(request);
+            // console.info(request.body);
+            // console.info(request.headers);
             const response = request.body;
-            reply.status(200).send(
-                response
-            );
+            if(request.headers.hasOwnProperty('pair')){
+                // if(request.headers.pair === btoa(process.env.KEYWORD))
+                reply.status(200).send(
+                    response
+                );
+            }else{
+                reply.status(400).send({
+                    message: "Request rejected"
+                });
+            }
         }catch(err){
             reply.status(400).send({
                 message: `${err}`
@@ -64,10 +71,9 @@ export async function routes(fastify=f, options=null) {
             reply.status(200).send({
                 message: {
                     METHOD: 'POST',
-                    REQUIRED: 'Key-Header, rawBody',
+                    REQUIRE: 'Key-Header, Body',
                     rawBody: {
                         username: '',
-                        mailaddr: '',
                         password: '',
                     }
                 }
@@ -94,7 +100,15 @@ export async function routes(fastify=f, options=null) {
     fastify.get("/logout",options, async (request,reply) => {
         try {
             reply.status(200).send({
-                
+                message: {
+                    METHOD: 'POST',
+                    REQUIRE: 'Key-Header, Body',
+                    Body: {
+                        username: '',
+                        mailaddr: '',
+                        password: '',
+                    }
+                }
             });
         }catch(err){
             reply.statusCode(400).send({
@@ -118,9 +132,9 @@ export async function routes(fastify=f, options=null) {
         try {
             reply.status(200).send({
                 message: {
-                    METHOD: 'POST',
+                    METHOD: 'POST|PUT',
                     REQUIRED: 'Key-Header, rawBody',
-                    rawBody: {
+                    Body: {
                         username: '',
                         mailaddr: '',
                         password: '',
@@ -150,6 +164,21 @@ export async function routes(fastify=f, options=null) {
         try {
             reply.status(200).send({
                 
+            });
+        }catch(err){
+            reply.statusCode(400).send({
+                message: `${err}`
+            })
+        }
+    });
+
+    fastify.get("/listUser",options, async (request,reply) => {
+        try {
+            reply.status(200).send({
+                message: {
+                    METHOD: 'POST',
+                    REQUIRED: 'Key-Header, CurrentDate-Header (Format: Ymd)',
+                }
             });
         }catch(err){
             reply.statusCode(400).send({
