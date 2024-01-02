@@ -1,5 +1,6 @@
 import dotenv from "../configs/environment.mjs";
 import mariadb from 'mariadb';
+import knex from "knex";
 import pkg from 'pg';
 // import * as knex from 'knex';
 
@@ -14,6 +15,7 @@ let client;
 let pool;
 
 export let defaultdb = process.env.MDB_pool;
+
 export async function dbpool(dbconnection=defaultdb)
 {
     let configuration;
@@ -64,4 +66,30 @@ export async function dbpool(dbconnection=defaultdb)
     }
 
     return configuration;
+}
+
+export const __knex = knex({
+    client: `mysql`,
+    pool: {
+        min: 0, 
+        max: 10
+    },
+    debug: true,
+    connection: {
+        host: process.env.DB_SERVER,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+    },
+})
+
+async function checkTable(tableName=null) {
+    return await orm.schema.hasTable(tableName);
+}
+
+export default {
+    __knex,
+    dbpool,
+    checkTable
 }
