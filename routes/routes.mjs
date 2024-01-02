@@ -88,9 +88,7 @@ export async function routes(fastify=f, options=null) {
                 }
             });
         }catch(err){
-            reply.statusCode(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 
@@ -119,9 +117,7 @@ export async function routes(fastify=f, options=null) {
                 }
             });
         }catch(err){
-            reply.statusCode(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 
@@ -139,37 +135,81 @@ export async function routes(fastify=f, options=null) {
                 }
             });
         }catch(err){
-            reply.statusCode(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 
     fastify.post("/register",options, async (request,reply) => {
         try {
-            reply.status(200).send({
-                data: {
-
+            if(request.headers.hasOwnProperty('keypair')){
+                if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
+                    if(request.headers.hasOwnProperty('current-date')){
+                        
+                        console.log(request.body);
+                        
+                        if(fetchdata.length > 0 ){
+                            reply.status(200).send({
+                                data: fetchdata
+                            });
+                        }else{
+                            reply.status(200).send({
+                                message: `${await users.getTableName()} currently have no data`
+                            });
+                        }
+                    }else{
+                        reply.status(202).send({
+                            message: "current-date header is needed"
+                        });
+                    }
+                }else {
+                    reply.status(202).send({
+                        message: "are you SYSUSER?"
+                    });
                 }
-            });
+            }else{
+                reply.status(202).send({
+                    message: "keypair header is missing"
+                })
+            }
         }catch(err){
-            reply.statusCode(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 
     fastify.put("/register",options, async (request,reply) => {
         try {
-            reply.status(200).send({
-                data: {
-
+            if(request.headers.hasOwnProperty('keypair')){
+                if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
+                    if(request.headers.hasOwnProperty('current-date')){
+                        
+                        console.log(request.body);
+                        let fetchdata = await users.create(request.body);
+                        if(fetchdata.length > 0 ){
+                            reply.status(200).send({
+                                data: fetchdata
+                            });
+                        }else{
+                            reply.status(200).send({
+                                message: `${await users.getTableName()} currently have no data`
+                            });
+                        }
+                    }else{
+                        reply.status(202).send({
+                            message: "current-date header is needed"
+                        });
+                    }
+                }else {
+                    reply.status(202).send({
+                        message: "are you SYSUSER?"
+                    });
                 }
-            });
+            }else{
+                reply.status(202).send({
+                    message: "keypair header is missing"
+                })
+            }
         }catch(err){
-            reply.statusCode(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 

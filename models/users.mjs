@@ -62,9 +62,31 @@ class users {
         let data;
 
         data = orm.__knex.insert({
-
+            username: userdata.username,
+            first_name: userdata.first_name,
+            last_name: userdata.last_name,
+            bio: userdata.bio,
+            email: userdata.email,
+            session_id: userdata.session_id,
+            password: userdata.password
         }).into(process.env.USERS_TABLE);
         
+        return data;
+    }
+
+    async update(userdata){
+        let data;
+
+        return data;
+    }
+
+    async delete(userdata){
+
+    }
+
+    async disable(userdata){
+        let data;
+
         return data;
     }
 }
