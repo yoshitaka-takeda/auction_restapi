@@ -16,8 +16,7 @@ let users_table = {
     },
 
     down: async function down(table=tableName){
-        return await __schema.schema.dropTable(table);
-        
+        return await __schema.schema.dropTable(table);        
     }
 }
 

@@ -5,7 +5,6 @@ import internalservices from "../globalservices/internalservices.mjs";
 
 dotenv.config();
 let f = fastify();
-let router;
 const frontUrl = process.env.PROXY_HOST;
 const options = {
 
@@ -14,8 +13,6 @@ const options = {
 export async function routes(fastify=f, options=null) {
 
     fastify.get("/",options, async (request,reply) => {
-        // console.log(request);
-        // console.log(reply);
         
         try {
             reply.status(200).send({
@@ -38,32 +35,30 @@ export async function routes(fastify=f, options=null) {
                 }
             });
         }catch(err){
-            reply.status(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 
     fastify.options("/", options, async (request, reply, next) => {
         try {
-            // console.log(request);
-            // console.info(request.body);
-            // console.info(request.headers);
             const response = request.body;
-            if(request.headers.hasOwnProperty('pair')){
-                // if(request.headers.pair === btoa(process.env.KEYWORD))
-                reply.status(200).send(
-                    response
-                );
+            if(request.headers.hasOwnProperty('keypair')){
+                if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
+                    reply.status(200).send(
+                        response
+                    );
+                }else{
+                    reply.status(202).send({
+                        message: "are you SYSUSER?"
+                    });
+                }
             }else{
                 reply.status(400).send({
                     message: "Request rejected"
                 });
             }
         }catch(err){
-            reply.status(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 
@@ -80,9 +75,7 @@ export async function routes(fastify=f, options=null) {
                 }
             });
         }catch(err){
-            reply.status(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 
@@ -114,9 +107,7 @@ export async function routes(fastify=f, options=null) {
                 }
             });
         }catch(err){
-            reply.statusCode(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
     fastify.post("/logout",options, async (request,reply) => {
@@ -197,7 +188,7 @@ export async function routes(fastify=f, options=null) {
     fastify.post("/listUser",options, async (request,reply) => {
         try {
             // console.log(request.headers);
-            console.log(request.body);
+            // console.log(request.body);
             if(request.headers.hasOwnProperty('keypair')){
                 if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
                     if(request.headers.hasOwnProperty('current-date')){
@@ -245,9 +236,7 @@ export async function routes(fastify=f, options=null) {
                 }
             });
         }catch(err){
-            reply.statusCode(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 
@@ -259,9 +248,7 @@ export async function routes(fastify=f, options=null) {
                 },
             });
         }catch(err){
-            reply.statusCode(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 }
