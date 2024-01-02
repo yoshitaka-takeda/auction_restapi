@@ -1,6 +1,6 @@
 import * as dbvar from '../configs/environment.mjs';
 import orm from '../configs/dbs.mjs';
-import users_table from '../populate/users_table.mjs';
+import users_table from '../migrate/users_table.mjs';
 const env = dbvar;
 
 process.env.USERS_TABLE = 'users';
@@ -15,6 +15,10 @@ if(!exists){
 }
 
 class users {
+    async getTableName() {
+        return process.env.USERS_TABLE;
+    }
+
     async findById(id=null) {
         let data;
         data = orm.__knex.select('*')
@@ -28,12 +32,12 @@ class users {
     async find(conditions=null){
         let data;
 
-        // 
+        // exactly findAll
         if(conditions=null){
-            data = orm.__knex.select(`*`)
-                .from(process.env.USERS_TABLE)
-                .orderBy('id','ASC');
-            // data = this.findAll();
+            // data = orm.__knex.select(`*`)
+            //     .from(process.env.USERS_TABLE)
+            //     .orderBy('id','ASC');
+            data = this.findAll();
         }else{
             data = {};
         }
@@ -61,4 +65,4 @@ class users {
     }
 }
 
-export default users;
+export default new users();

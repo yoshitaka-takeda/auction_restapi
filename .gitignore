@@ -65,3 +65,6 @@ typings/
 
 # Custom path to be skipped
 prev/
+
+# Skip services folder
+globalservices/

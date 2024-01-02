@@ -1,6 +1,7 @@
 import fastify from "fastify";
-// import fastifyRawBody from "fastify-raw-body";
 import dotenv from "../configs/environment.mjs";
+import users from "../models/users.mjs";
+import internalservices from "../globalservices/internalservices.mjs";
 
 dotenv.config();
 let f = fastify();
@@ -71,7 +72,7 @@ export async function routes(fastify=f, options=null) {
             reply.status(200).send({
                 message: {
                     METHOD: 'POST',
-                    REQUIRE: 'Key-Header, Body',
+                    REQUIRE: 'KeyPair-Header, Body',
                     rawBody: {
                         username: '',
                         password: '',
@@ -104,7 +105,7 @@ export async function routes(fastify=f, options=null) {
             reply.status(200).send({
                 message: {
                     METHOD: 'POST',
-                    REQUIRE: 'Key-Header, Body',
+                    REQUIRE: 'KeyPair-Header, Body',
                     Body: {
                         username: '',
                         mailaddr: '',
@@ -137,7 +138,7 @@ export async function routes(fastify=f, options=null) {
             reply.status(200).send({
                 message: {
                     METHOD: 'POST|PUT',
-                    REQUIRED: 'Key-Header, rawBody',
+                    REQUIRED: 'KeyPair-Header, rawBody',
                     Body: {
                         username: '',
                         mailaddr: '',
@@ -185,27 +186,48 @@ export async function routes(fastify=f, options=null) {
             reply.status(200).send({
                 message: {
                     METHOD: 'POST',
-                    REQUIRED: 'Key-Header, CurrentDate-Header (Format: Ymd)',
+                    REQUIRED: 'KeyPair-Header, Current-Date-Header (Format: YYYYmmdd)',
                 }
             });
         }catch(err){
-            reply.statusCode(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 
     fastify.post("/listUser",options, async (request,reply) => {
         try {
-            reply.status(200).send({
-                data: {
-
-                },
-            });
+            // console.log(request.headers);
+            console.log(request.body);
+            if(request.headers.hasOwnProperty('keypair')){
+                if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
+                    if(request.headers.hasOwnProperty('current-date')){
+                        const fetchdata = await users.findAll();
+                        if(fetchdata.length > 0 ){
+                            reply.status(200).send({
+                                data: fetchdata
+                            });
+                        }else{
+                            reply.status(200).send({
+                                message: `${await users.getTableName()} currently have no data`
+                            });
+                        }
+                    }else{
+                        reply.status(202).send({
+                            message: "current-date header is needed"
+                        });
+                    }
+                }else {
+                    reply.status(202).send({
+                        message: "are you SYSUSER?"
+                    });
+                }
+            }else{
+                reply.status(202).send({
+                    message: "keypair header is missing"
+                })
+            }
         }catch(err){
-            reply.statusCode(400).send({
-                message: `${err}`
-            })
+            throw err;
         }
     });
 
