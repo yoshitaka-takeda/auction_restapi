@@ -5,6 +5,7 @@ import internalservices from "../globalservices/internalservices.mjs";
 
 dotenv.config();
 let f = fastify();
+let router;
 const frontUrl = process.env.PROXY_HOST;
 const options = {
 
@@ -229,7 +230,6 @@ export async function routes(fastify=f, options=null) {
                     METHOD: 'POST',
                     REQUIRED: 'Key-Header, Body (JSON)',
                     Body: {
-                        id: '',
                         username: '',
                         session_id: ''
                     }
@@ -242,11 +242,36 @@ export async function routes(fastify=f, options=null) {
 
     fastify.post("/getUser",options, async (request,reply) => {
         try {
-            reply.status(200).send({
-                data: {
 
-                },
-            });
+            // console.log(request.body);
+            if(request.headers.hasOwnProperty('keypair')){
+                if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
+                    if(request.headers.hasOwnProperty('current-date')){
+                        const fetchdata = await users.find(request.body);
+                        if(fetchdata.length > 0 ){
+                            reply.status(200).send({
+                                data: fetchdata
+                            });
+                        }else{
+                            reply.status(200).send({
+                                message: `${await users.getTableName()} currently have no data`
+                            });
+                        }
+                    }else{
+                        reply.status(202).send({
+                            message: "current-date header is needed"
+                        });
+                    }
+                }else {
+                    reply.status(202).send({
+                        message: "are you SYSUSER?"
+                    });
+                }
+            }else{
+                reply.status(202).send({
+                    message: "keypair header is missing"
+                })
+            }
         }catch(err){
             throw err;
         }

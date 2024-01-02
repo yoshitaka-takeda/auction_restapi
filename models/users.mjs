@@ -1,6 +1,6 @@
 import * as dbvar from '../configs/environment.mjs';
 import orm from '../configs/dbs.mjs';
-import users_table from '../migrate/users_table.mjs';
+import users_table from '../migrations/users_table.mjs';
 const env = dbvar;
 
 process.env.USERS_TABLE = 'users';
@@ -29,18 +29,22 @@ class users {
         return data;
     }
 
-    async find(conditions=null){
+    async find(conditions){
         let data;
 
         // exactly findAll
-        if(conditions=null){
+        if(conditions.length===0){
             // data = orm.__knex.select(`*`)
             //     .from(process.env.USERS_TABLE)
             //     .orderBy('id','ASC');
             data = this.findAll();
         }else{
-            data = {};
+            data = orm.__knex.select(`*`)
+                .from(process.env.USERS_TABLE)
+                .where(conditions)
+                .orderBy('id', 'ASC');
         }
+
         return data;
     }
 
