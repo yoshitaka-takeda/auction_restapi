@@ -363,10 +363,8 @@ export async function checkFront(url=frontUrl) {
                 "Content-Type": "application/json",
             }
         }).then((response) => {
-            console.info(response);
             return response;
         }).catch((response) => {
-            console.error(response);
             return response;
         });
     }catch(err){
