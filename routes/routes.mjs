@@ -2,6 +2,7 @@ import fastify from "fastify";
 import dotenv from "../configs/environment.mjs";
 import users from "../models/users.mjs";
 import internalservices from "../globalservices/internalservices.mjs";
+import cryptography from "../services/cryptography.mjs";
 
 dotenv.config();
 let f = fastify();
@@ -12,9 +13,7 @@ const options = {
 };
 
 export async function routes(fastify=f, options=null) {
-
     fastify.get("/",options, async (request,reply) => {
-        
         try {
             reply.status(200).send({
                 message: { 
@@ -301,6 +300,35 @@ export async function routes(fastify=f, options=null) {
                         reply.status(202).send({
                             message: "current-date header is needed"
                         });
+                    }
+                }else {
+                    reply.status(202).send({
+                        message: "are you SYSUSER?"
+                    });
+                }
+            }else{
+                reply.status(202).send({
+                    message: "keypair header is missing"
+                })
+            }
+        }catch(err){
+            throw err;
+        }
+    });
+
+    fastify.get("/test",options, async (request,reply) => {
+        try {
+            if(request.headers.hasOwnProperty('keypair')){
+                if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
+                    const __cryptography = cryptography;
+                    try{
+                        console.log(__cryptography);
+                        let x = __cryptography;
+                        reply.status(200).send({
+                            data: {}
+                        });
+                    }catch(err){
+                        throw err;
                     }
                 }else {
                     reply.status(202).send({

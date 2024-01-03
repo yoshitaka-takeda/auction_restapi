@@ -4,7 +4,6 @@ import * as dbs from './configs/dbs.mjs';
 import fastify from 'fastify';
 import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
-import fastifyRawBody from 'fastify-raw-body';
 import { checkFront, routes } from './routes/routes.mjs';
 import fs from 'fs';
 import * as fsextra from 'fs-extra';
@@ -39,16 +38,6 @@ try {
         // status: { type: 'object', additionalProperties: true },
     });
     __db.dbpool();
-
-    /*
-    app.register(fastifyRawBody,{
-        field: "rawBody", // change the default request.rawBody property name
-        global: true, // add the rawBody to every request. **Default true**
-        encoding: "utf8", // set it to false to set rawBody as a Buffer **Default utf8**
-        runFirst: true, // get the body before any preParsing hook change/uncompress it. **Default false**
-        // routes: [], // array of routes, **`global`** will be ignored, wildcard routes not supported
-    });
-    */
    
     app.register(fastifyStatic,{
         root: path.join(__dirname, 'public'),
@@ -72,12 +61,11 @@ try {
     });
 
     app.listen({path: process.env.APP_HOST, port: process.env.APP_PORT}, function (err,address) {
-        console.info(address);
+        // console.info(address);
         if(err) {
             throw err;
-            process.exit(1);
         }
     });
 }catch(err){
-    console.log(err);
+    throw err;
 }

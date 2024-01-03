@@ -33,9 +33,17 @@ export async function dbpool(dbconnection=defaultdb)
                         connectTimeout: 7000,
                     });
                     client = await pool.getConnection();
-                    const output = client.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;`).then((res) =>console.log(res));
-                    let xoutput = client.query(`SELECT * FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=\'${process.env.DB_NAME}\'`).then((rows) => console.log(rows));
-                    console.log(xoutput);
+                    const output = client.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;`)
+                        .then((res) => {
+                            // console.log(res)
+                            return res;
+                        });
+                    let xoutput = client.query(`SELECT * FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=\'${process.env.DB_NAME}\'`)
+                        .then((rows) => {
+                            // console.log(rows)
+                            return rows;
+                        });
+                    // console.log(xoutput);
                     configuration = xoutput;
                     console.log(`using ${dbconnection} pool`);
                 }catch(swerr){
@@ -74,7 +82,7 @@ export const __knex = knex({
         min: 0, 
         max: 10
     },
-    debug: true,
+    debug: false,
     connection: {
         host: process.env.DB_SERVER,
         port: process.env.DB_PORT,
