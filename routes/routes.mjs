@@ -281,7 +281,6 @@ export async function routes(fastify=f, options=null) {
 
     fastify.post("/getUser",options, async (request,reply) => {
         try {
-
             // console.log(request.body);
             if(request.headers.hasOwnProperty('keypair')){
                 if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
@@ -323,9 +322,13 @@ export async function routes(fastify=f, options=null) {
                     const __cryptography = cryptography;
                     try{
                         console.log(__cryptography);
-                        let x = __cryptography;
+                        let y = __cryptography.encryption("mbuh");
+                        let x = __cryptography.decryption(y);
+                        
                         reply.status(200).send({
-                            data: {}
+                            data: process.versions,
+                            encr: y,
+                            decr: x                            
                         });
                     }catch(err){
                         throw err;

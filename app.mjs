@@ -47,7 +47,9 @@ try {
         constraints: { }, //{ host: 'example.com' } // optional: default {}
         handler: (request,reply) => {
             console.log(request);
-            reply.status(403).send({message: "beep!"});
+            reply.status(403).send({
+                message: "beep!"
+            });
         }
     });
 

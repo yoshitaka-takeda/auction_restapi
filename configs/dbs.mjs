@@ -40,10 +40,10 @@ export async function dbpool(dbconnection=defaultdb)
                         });
                     let xoutput = client.query(`SELECT * FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=\'${process.env.DB_NAME}\'`)
                         .then((rows) => {
-                            // console.log(rows)
+                            // console.log(rows);
                             return rows;
                         });
-                    // console.log(xoutput);
+                    // console.log(xoutput.then(async (response) => {return await response;}));
                     configuration = xoutput;
                     console.log(`using ${dbconnection} pool`);
                 }catch(swerr){
@@ -93,7 +93,8 @@ export const __knex = knex({
 })
 
 async function checkTable(tableName=null) {
-    return await orm.schema.hasTable(tableName);
+    // orm.schema.hasTable(tableName);
+    return await __knex.schema.hasTable(tableName);
 }
 
 export default {
