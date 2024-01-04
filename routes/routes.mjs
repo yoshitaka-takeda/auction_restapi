@@ -179,9 +179,8 @@ export async function routes(fastify=f, options=null) {
         try {
             if(request.headers.hasOwnProperty('keypair')){
                 if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
-                    if(request.headers.hasOwnProperty('current-date')){
-                        
-                        console.log(request.body);
+                    if(request.headers.hasOwnProperty('current-date')){ 
+                        // console.log(request.body);
                         let fetchdata = await users.create(request.body);
                         if(fetchdata.length > 0 ){
                             reply.status(200).send({
@@ -321,14 +320,53 @@ export async function routes(fastify=f, options=null) {
                 if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
                     const __cryptography = cryptography;
                     try{
-                        console.log(__cryptography);
-                        let y = __cryptography.encryption("mbuh");
+                        console.log(request);
+                        let y = __cryptography.encryption(request.body);
                         let x = __cryptography.decryption(y);
                         
                         reply.status(200).send({
                             data: process.versions,
                             encr: y,
                             decr: x                            
+                        });
+                    }catch(err){
+                        throw err;
+                    }
+                }else {
+                    reply.status(202).send({
+                        message: "are you SYSUSER?"
+                    });
+                }
+            }else{
+                reply.status(202).send({
+                    message: "keypair header is missing"
+                })
+            }
+        }catch(err){
+            throw err;
+        }
+    });
+
+    fastify.post("/test",options, async (request,reply) => {
+        try {
+            if(request.headers.hasOwnProperty('keypair')){
+                if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
+                    const __cryptography = cryptography;
+                    try{
+                        console.log(request.body);
+                        let y = __cryptography.encryption(request.body.password);
+                        const h = internalservices.password_hash(y).then(result => {return result;});
+                        const hres = await h;
+                        let x = __cryptography.decryption(y);
+                        const v = internalservices.validate_password(y, hres);
+                        const vres = await v;
+                        
+                        reply.status(200).send({
+                            // data: process.versions,
+                            encr: y,
+                            hash: hres,
+                            decr: x,
+                            validation: vres              
                         });
                     }catch(err){
                         throw err;
