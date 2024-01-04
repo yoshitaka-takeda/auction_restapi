@@ -18,7 +18,7 @@ class cryptography {
         }
 
         let iv = crypto.randomBytes(this.IV_LENGTH);
-        let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(this.password), iv);
+        let cipher = crypto.createCipheriv(this.AES_METHOD, Buffer.from(this.password), iv);
         let encrypted = cipher.update(string);
         encrypted = Buffer.concat([encrypted, cipher.final()]);
 
@@ -33,7 +33,7 @@ class cryptography {
         let textParts = string.split(':');
         let iv = Buffer.from(textParts[0], 'hex');
         let encryptedText = Buffer.from(textParts[1], 'hex');
-        let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(this.password), iv);
+        let decipher = crypto.createDecipheriv(this.AES_METHOD, Buffer.from(this.password), iv);
         let decrypted = decipher.update(encryptedText);
         decrypted = Buffer.concat([decrypted, decipher.final()]);
 
