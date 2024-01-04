@@ -142,17 +142,42 @@ export async function routes(fastify=f, options=null) {
         try {
             if(request.headers.hasOwnProperty('keypair')){
                 if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
-                    if(request.headers.hasOwnProperty('current-date')){
-                        
-                        console.log(request.body);
-                        
-                        if(fetchdata.length > 0 ){
-                            reply.status(200).send({
-                                data: fetchdata
-                            });
+                    if(request.headers.hasOwnProperty('current-date')){                        
+                        let inputs = request.body;                        
+                        let __inputs = {
+                            "username": inputs['username'],
+                            "first_name": cryptography.encryption(inputs['first_name']),
+                            "last_name": cryptography.encryption(inputs['last_name']),
+                            "email": inputs['email'],
+                            "password": await internalservices.password_hash(cryptography.encryption(inputs['password']))
+                        };
+                        inputs = [];
+                        var dataLength = Object.keys(__inputs).length;
+                        if(dataLength > 0){
+                            //check if username or email exists
+                            const finder = await users.find({"username": __inputs.username, "email": __inputs.email});
+                            let finderLength = Object.keys(finder).length;
+                            // finderLength = 2;
+                            console.log(finder);
+                            if(finderLength === 0){
+                                let fetchdata = await users.create(__inputs);
+                                if(fetchdata.length > 0 ){
+                                    reply.status(200).send({
+                                        data: fetchdata
+                                    });
+                                }else{
+                                    reply.status(200).send({
+                                        message: `Cannot store data to ${await users.getTableName()}`
+                                    });
+                                }
+                            }else{
+                                reply.status(200).send({
+                                    message: `Cannot store data to ${await users.getTableName()}; username, email already in-stored`
+                                });
+                            }
                         }else{
-                            reply.status(200).send({
-                                message: `${await users.getTableName()} currently have no data`
+                            reply.status(202).send({
+                                message: `Inputs is: ${inputs.length}, Halting ${await users.getTableName()} registration`
                             });
                         }
                     }else{
@@ -180,15 +205,41 @@ export async function routes(fastify=f, options=null) {
             if(request.headers.hasOwnProperty('keypair')){
                 if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
                     if(request.headers.hasOwnProperty('current-date')){ 
-                        // console.log(request.body);
-                        let fetchdata = await users.create(request.body);
-                        if(fetchdata.length > 0 ){
-                            reply.status(200).send({
-                                data: fetchdata
-                            });
+                        let inputs = request.body;                        
+                        let __inputs = {
+                            "username": inputs['username'],
+                            "first_name": cryptography.encryption(inputs['first_name']),
+                            "last_name": cryptography.encryption(inputs['last_name']),
+                            "email": inputs['email'],
+                            "password": await internalservices.password_hash(cryptography.encryption(inputs['password']))
+                        };
+                        inputs = [];
+                        var dataLength = Object.keys(__inputs).length;
+                        if(dataLength > 0){
+                            //check if username or email exists
+                            const finder = await users.find({"username": __inputs.username, "email": __inputs.email});
+                            let finderLength = Object.keys(finder).length;
+                            // finderLength = 2;
+                            console.log(finder);
+                            if(finderLength === 0){
+                                let fetchdata = await users.create(__inputs);
+                                if(fetchdata.length > 0 ){
+                                    reply.status(200).send({
+                                        data: fetchdata
+                                    });
+                                }else{
+                                    reply.status(200).send({
+                                        message: `Cannot store data to ${await users.getTableName()}`
+                                    });
+                                }
+                            }else{
+                                reply.status(200).send({
+                                    message: `Cannot store data to ${await users.getTableName()}; username, email already in-stored`
+                                });
+                            }
                         }else{
-                            reply.status(200).send({
-                                message: `${await users.getTableName()} currently have no data`
+                            reply.status(202).send({
+                                message: `Inputs is: ${inputs.length}, Halting ${await users.getTableName()} registration`
                             });
                         }
                     }else{
@@ -268,7 +319,7 @@ export async function routes(fastify=f, options=null) {
                     METHOD: 'POST',
                     REQUIRED: 'Key-Header, Body (JSON)',
                     Body: {
-                        username: '',
+                        username: '(compulsory)',
                         session_id: ''
                     }
                 }
@@ -291,7 +342,7 @@ export async function routes(fastify=f, options=null) {
                             });
                         }else{
                             reply.status(200).send({
-                                message: `${await users.getTableName()} currently have no data`
+                                message: `${await users.getTableName()} currently have no data or ${request.body.username} doesn't match any record`
                             });
                         }
                     }else{
@@ -320,14 +371,12 @@ export async function routes(fastify=f, options=null) {
                 if(process.env.KEYWORD === internalservices.decode(request.headers.keypair)){
                     const __cryptography = cryptography;
                     try{
-                        console.log(request);
-                        let y = __cryptography.encryption(request.body);
-                        let x = __cryptography.decryption(y);
-                        
+                        console.log(request.query);
+                        const __q = request.query;
+
                         reply.status(200).send({
-                            data: process.versions,
-                            encr: y,
-                            decr: x                            
+                            message: "testbed-route",
+                            data: __q             
                         });
                     }catch(err){
                         throw err;

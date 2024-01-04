@@ -14,6 +14,7 @@ let users_table = {
             t.text('first_name').notNullable();
             t.text('last_name').notNullable();
             t.text('bio');
+            // t.text('personal_uuid');
             t.string('email',255).notNullable();
             t.text('session_id');
             t.text('password');
