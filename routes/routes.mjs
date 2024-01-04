@@ -70,6 +70,7 @@ export async function routes(fastify=f, options=null) {
                     REQUIRE: 'KeyPair-Header, Body',
                     rawBody: {
                         username: '',
+                        email: '',
                         password: '',
                     }
                 }
@@ -99,7 +100,7 @@ export async function routes(fastify=f, options=null) {
                     REQUIRE: 'KeyPair-Header, Body',
                     Body: {
                         username: '',
-                        mailaddr: '',
+                        email: '',
                         password: '',
                     }
                 }
@@ -127,9 +128,11 @@ export async function routes(fastify=f, options=null) {
                     METHOD: 'POST|PUT',
                     REQUIRED: 'KeyPair-Header, rawBody',
                     Body: {
-                        username: '',
-                        mailaddr: '',
-                        password: '',
+                        username: '(username length > 10)',
+                        first_name: '',
+                        last_name: '',
+                        email: '',
+                        password: '(password length >= 8)',
                     }
                 }
             });
@@ -160,6 +163,7 @@ export async function routes(fastify=f, options=null) {
                             // finderLength = 2;
                             console.log(finder);
                             if(finderLength === 0){
+                                // if(inputs.password.length > )
                                 let fetchdata = await users.create(__inputs);
                                 if(fetchdata.length > 0 ){
                                     reply.status(200).send({
