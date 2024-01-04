@@ -1,29 +1,40 @@
-import * as dbvar from '../configs/environment.mjs';
+import dotenv from '../configs/environment.mjs';
 import orm from '../configs/dbs.mjs';
-import users_table from '../migrations/users_table.mjs';
-const env = dbvar;
+import users_table from '../migrations/userstorage_table.mjs';
+dotenv.config();
 
-process.env.USERS_TABLE = 'users';
+process.env.USERSTORAGE_TABLE = 'userstorage';
 let exists = orm.__knex;
 
-exists = await exists.schema.hasTable(process.env.USERS_TABLE).then((exists) => {
+exists = await exists.schema.hasTable(process.env.USERSTORAGE_TABLE).then((exists) => {
     return exists;
 });
 
 if(!exists){
-    users_table.up(process.env.USERS_TABLE);
+    users_table.up(process.env.USERSTORAGE_TABLE);
 }
 
 class users {
     async getTableName() {
-        return process.env.USERS_TABLE;
+        return process.env.USERSTORAGE_TABLE;
     }
 
-    async findById(id) {
+    async findById(id){
+        let data;
+
+        data = orm.__knex.select('*')
+            .from(process.env.USERSTORAGE_TABLE)
+            .where('id',id)
+            .limit(1);
+
+        return data;
+    }
+
+    async findByUserId(id) {
         let data;
         data = orm.__knex.select('*')
-            .from(process.env.USERS_TABLE)
-            .where('id',id)
+            .from(process.env.USERSTORAGE_TABLE)
+            .where('user_id',id)
             .limit(1);
         
         return data;
@@ -40,7 +51,7 @@ class users {
             data = this.findAll();
         }else{
             data = orm.__knex.select(`*`)
-                .from(process.env.USERS_TABLE)
+                .from(process.env.USERSTORAGE_TABLE)
                 .where(conditions)
                 .orderBy('id', 'ASC');
         }
@@ -52,7 +63,7 @@ class users {
         let data;
         
         data = orm.__knex.select(`*`)
-            .from(process.env.USERS_TABLE)
+            .from(process.env.USERSTORAGE_TABLE)
             .orderBy('id','ASC');
     
         return data;
@@ -69,7 +80,7 @@ class users {
             email: userdata.email,
             session_id: userdata.session_id,
             password: userdata.password
-        }).into(process.env.USERS_TABLE);
+        }).into(process.env.USERSTORAGE_TABLE);
         
         return data;
     }
