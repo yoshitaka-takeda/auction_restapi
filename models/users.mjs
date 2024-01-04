@@ -89,6 +89,10 @@ class users {
 
         return data;
     }
+
+    async resetTable(){
+
+    }
 }
 
 export default new users();

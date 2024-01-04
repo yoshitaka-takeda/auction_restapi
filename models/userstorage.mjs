@@ -14,7 +14,7 @@ if(!exists){
     users_table.up(process.env.USERSTORAGE_TABLE);
 }
 
-class users {
+class userstorage {
     async getTableName() {
         return process.env.USERSTORAGE_TABLE;
     }
@@ -100,6 +100,10 @@ class users {
 
         return data;
     }
+
+    async resetTable(){
+        
+    }
 }
 
-export default new users();
+export default new userstorage();
