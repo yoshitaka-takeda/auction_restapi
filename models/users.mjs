@@ -1,8 +1,10 @@
-import * as dbvar from '../configs/environment.mjs';
+import dotenv from '../configs/environment.mjs';
 import orm from '../configs/dbs.mjs';
 import users_table from '../migrations/users_table.mjs';
-const env = dbvar;
 
+dotenv.config();
+const env = dotenv.config();
+console.log(env);
 process.env.USERS_TABLE = 'users';
 let exists = orm.__knex;
 
@@ -91,7 +93,8 @@ class users {
     }
 
     async resetTable(){
-
+        const response = await users_table.down(process.env.USERS_TABLE);
+        return response;
     }
 }
 
