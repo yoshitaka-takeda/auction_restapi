@@ -66,5 +66,8 @@ typings/
 # Custom path to be skipped
 prev/
 
-# Skip services folder
+# Skip globalservices folder
 globalservices/
+
+# ignore zip files --omittable--
+*.zip
