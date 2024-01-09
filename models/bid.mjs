@@ -1,3 +1,4 @@
+'use strict';
 import dotenv from "../configs/environment.mjs";
 import orm from '../configs/dbs.mjs';
 import biddings_table from '../migrations/biddings_table.mjs';

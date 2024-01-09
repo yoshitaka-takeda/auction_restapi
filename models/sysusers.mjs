@@ -1,3 +1,4 @@
+'use strict';
 import dotenv from '../configs/environment.mjs';
 import orm from '../configs/dbs.mjs';
 import sysusers_table from '../migrations/sysusers_table.mjs';

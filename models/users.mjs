@@ -1,5 +1,4 @@
 'use strict';
-
 import dotenv from '../configs/environment.mjs';
 import orm from '../configs/dbs.mjs';
 import users_table from '../migrations/users_table.mjs';
