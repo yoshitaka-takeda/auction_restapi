@@ -1,6 +1,9 @@
+'use strict';
+
 import dotenv from '../configs/environment.mjs';
 import orm from '../configs/dbs.mjs';
 import users_table from '../migrations/users_table.mjs';
+import { Model } from 'objection';
 
 dotenv.config();
 const env = dotenv.config();
@@ -16,8 +19,8 @@ if(!exists){
     users_table.up(process.env.USERS_TABLE);
 }
 
-class users {
-    async getTableName() {
+class users extends Model {
+    static get tableName() {
         return process.env.USERS_TABLE;
     }
 
@@ -95,6 +98,10 @@ class users {
     async resetTable(){
         const response = await users_table.down(process.env.USERS_TABLE);
         return response;
+    }
+
+    static get jsonSchema(){
+        return
     }
 }
 
