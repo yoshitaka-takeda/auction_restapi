@@ -112,7 +112,15 @@ class userstorage extends Model {
     }
 
     static get jsonSchema() {
-        return {};
+        return {
+
+        };
+    }
+
+    static get relationMappings() {
+        return {
+
+        };
     }
 
 }

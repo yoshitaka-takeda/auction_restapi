@@ -36,7 +36,30 @@ class items extends Model {
     }
 
     static get jsonSchema() {
-        return {};
+        return {
+            type: 'object',
+            required: ['item_code','item_name','price','initial_offer'],
+            properties: {
+                id: {type: 'integer'},
+                item_code: {type: 'text'},
+                item_name: {type: 'text'},
+                details: {type: 'text'},
+                price: {type: 'decimal'},
+                initial_offer: {type: 'decimal'},
+                image_path: {type: 'text'},
+                sysuser_id: {type: 'integer'},
+                created_at: {type: 'datetime'},
+                updated_at: {type: 'datetime'}
+            }
+        };
+    }
+
+    static get relationMappings() {
+        const sysusers = import('./sysusers.mjs');
+
+        return {
+
+        };
     }
 }
 

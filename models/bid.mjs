@@ -33,9 +33,16 @@ class bid extends Model{
     }
 
     static get jsonSchema() {
-        return {};
+        return {
+
+        };
     }
 
+    static get relationMappings() {
+        return {
+
+        };
+    }
 }
 
 export default new bid();

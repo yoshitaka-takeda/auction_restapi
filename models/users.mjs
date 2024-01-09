@@ -6,7 +6,7 @@ import { Model } from 'objection';
 
 dotenv.config();
 const env = dotenv.config();
-console.log(env);
+// console.log(env);
 process.env.USERS_TABLE = 'users';
 let exists = orm.__knex;
 
@@ -122,7 +122,7 @@ class users extends Model {
         const userstorage = import('./userstorage.mjs');
 
         return {
-            
+
         };
     }
 }

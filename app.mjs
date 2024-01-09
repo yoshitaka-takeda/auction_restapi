@@ -40,7 +40,7 @@ try {
     __db.dbpool();
    
     app.register(fastifyStatic,{
-        root: path.join(__dirname, 'public'),
+        root: path.join(__dirname, `${__publicPrefix}`),
         prefix: `/${__publicPrefix}/`, // optional: default '/'
         index: false,
         list: false,
@@ -53,7 +53,7 @@ try {
         }
     });
 
-    console.log(checkFront(''));
+    // console.log(checkFront(''));
     app.register(routes);
 
     await app.register(cors,{

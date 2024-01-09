@@ -12,12 +12,14 @@ let items_table = {
     up: async function up(table=tableName){
         return await __schema.schema.createTable(table, function(t) {
             t.increments('id').primary();
-            t.text('item_code');
-            t.text('item_name');
+            t.text('item_code').notNullable();
+            t.text('item_name').notNullable();
             t.text('details');
-            t.decimal('price',10,2);
-            t.decimal('initial_offer',10,2);
+            t.decimal('price',12,4).notNullable();
+            t.decimal('initial_offer',12,4).notNullable();
             t.text('image_path');
+            t.integer('sysuser_id').unsigned();
+            t.foreign('sysuser_id').references('id').inTable('sysusers');
             t.timestamps(true, __schema.fn.now(8), false);
         });
     },

@@ -22,9 +22,16 @@ class sysusers extends Model {
     }
 
     static get jsonSchema() {
-        return {};
+        return {
+
+        };
     }
 
+    static get relationMappings() {
+        return {
+
+        };
+    }
 }
 
 export default new sysusers();
