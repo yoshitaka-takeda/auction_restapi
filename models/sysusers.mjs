@@ -20,6 +20,10 @@ class sysusers extends Model {
         return process.env.SYSUSERS_TABLE;
     }
 
+    static get jsonSchema() {
+        return {};
+    }
+
 }
 
 export default new sysusers();

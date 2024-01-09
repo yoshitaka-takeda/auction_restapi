@@ -34,7 +34,7 @@ class users extends Model {
         return data;
     }
 
-    async find(conditions){
+    async find(conditions) {
         let data;
 
         // exactly findAll
@@ -53,7 +53,7 @@ class users extends Model {
         return data;
     }
 
-    async findAll(){
+    async findAll() {
         let data;
         
         data = orm.__knex.select(`*`)
@@ -63,7 +63,7 @@ class users extends Model {
         return data;
     }
 
-    async create(userdata){
+    async create(userdata) {
         let data;
 
         data = orm.__knex.insert({
@@ -79,29 +79,29 @@ class users extends Model {
         return data;
     }
 
-    async update(userdata){
+    async update(userdata) {
         let data;
 
         return data;
     }
 
-    async delete(userdata){
+    async delete(userdata) {
 
     }
 
-    async disable(userdata){
+    async disable(userdata) {
         let data;
 
         return data;
     }
 
-    async resetTable(){
+    async resetTable() {
         const response = await users_table.down(process.env.USERS_TABLE);
         return response;
     }
 
-    static get jsonSchema(){
-        return
+    static get jsonSchema() {
+        return {};
     }
 }
 

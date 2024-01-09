@@ -1,8 +1,9 @@
 import dotenv from '../configs/environment.mjs';
 import orm from '../configs/dbs.mjs';
 import users_table from '../migrations/userstorage_table.mjs';
-dotenv.config();
+import { Model } from 'objection';
 
+dotenv.config();
 process.env.USERSTORAGE_TABLE = 'userstorage';
 let exists = orm.__knex;
 
@@ -14,12 +15,16 @@ if(!exists){
     users_table.up(process.env.USERSTORAGE_TABLE);
 }
 
-class userstorage {
+class userstorage extends Model {
+    static get tableName() {
+        return process.env.USERSTORAGE_TABLE;
+    }
+
     async getTableName() {
         return process.env.USERSTORAGE_TABLE;
     }
 
-    async findById(id){
+    async findById(id) {
         let data;
 
         data = orm.__knex.select('*')
@@ -40,7 +45,7 @@ class userstorage {
         return data;
     }
 
-    async find(conditions){
+    async find(conditions) {
         let data;
 
         // exactly findAll
@@ -59,7 +64,7 @@ class userstorage {
         return data;
     }
 
-    async findAll(){
+    async findAll() {
         let data;
         
         data = orm.__knex.select(`*`)
@@ -69,7 +74,7 @@ class userstorage {
         return data;
     }
 
-    async create(userdata){
+    async create(userdata) {
         let data;
 
         data = orm.__knex.insert({
@@ -85,25 +90,30 @@ class userstorage {
         return data;
     }
 
-    async update(userdata){
+    async update(userdata) {
         let data;
 
         return data;
     }
 
-    async delete(userdata){
+    async delete(userdata) {
 
     }
 
-    async disable(userdata){
+    async disable(userdata) {
         let data;
 
         return data;
     }
 
-    async resetTable(){
+    async resetTable() {
         
     }
+
+    static get jsonSchema() {
+        return {};
+    }
+
 }
 
 export default new userstorage();

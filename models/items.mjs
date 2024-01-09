@@ -1,6 +1,7 @@
 import dotenv from '../configs/environment.mjs';
 import orm from '../configs/dbs.mjs';
 import items_table from '../migrations/items_table.mjs';
+import { Model } from 'objection';
 
 dotenv.config();
 const env = dotenv.config();
@@ -17,20 +18,24 @@ if(!exists){
     items_table.up(process.env.ITEMS_TABLE);
 }
 
+class items extends Model {
+    static get tableName() {
+        return process.env.ITEMS_TABLE;
+    }
 
-dotenv.config();
-
-
-class items {
     async create(inputs) {
         let data;
 
         return data;
     }
 
-    async resetTable(){
+    async resetTable() {
         const response = await items_table.down();
         return response;
+    }
+
+    static get jsonSchema() {
+        return {};
     }
 }
 
