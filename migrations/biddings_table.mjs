@@ -12,8 +12,12 @@ let biddings_table = {
     up: async function up(table=tableName){
         return await __schema.schema.createTable(table, function(t) {
             t.increments('id').primary();
-            t.integer('user_id',10).references('id').inTable('users');
-            t.integer('item_id',10).references('id').inTable('items');
+            t.integer('user_id',10);
+            t.foreign('user_id').references('id').inTable('users');
+            t.integer('item_id',10);
+            t.foreign('item_id').references('id').inTable('items');
+            t.integer('sysuser_id',10);
+            t.foreign('sysuser_id').references('id').inTable('sysusers');
             t.decimal('initial_offer',12,4).checkPositive();
             t.decimal('last_max_price',12,4).checkPositive();
             t.decimal('bid_placed',12,4).checkPositive();
