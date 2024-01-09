@@ -23,15 +23,23 @@ class sysusers extends Model {
 
     static get jsonSchema() {
         return {
-
+            type: 'object',
+            required: ['first_name','last_name','email'],
+            properties: {
+                id: {type: 'integer'},
+                username: {type: 'string', minLength: 8, maxLength: 255},
+                first_name: {type: 'text'},
+                last_name: {type: 'text'},
+                bio: {type: 'text'},
+                email: {type: 'string', maxLength: 255},
+                session_id: {type: 'text'},
+                password: {type: 'text'},
+                created_at: {type: 'datetime'},
+                updated_at: {type: 'datetime'}
+            }
         };
     }
 
-    static get relationMappings() {
-        return {
-
-        };
-    }
 }
 
 export default new sysusers();

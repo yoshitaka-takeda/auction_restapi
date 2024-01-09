@@ -117,14 +117,6 @@ class users extends Model {
             }
         };
     }
-
-    static get relationMappings() {
-        const userstorage = import('./userstorage.mjs');
-
-        return {
-
-        };
-    }
 }
 
 export default new users();

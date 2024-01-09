@@ -12,7 +12,8 @@ let userstorage_table = {
     up: async function up(table=tableName){
         return await __schema.schema.createTable(table, function(t) {
             t.increments('id').primary();
-            t.integer('user_id',10);
+            t.integer('user_id').unsigned();
+            t.foreign('user_id').references('id').inTable('users');
             t.text('original_key');
             t.text('cryptic_key');
             t.timestamps(true, __schema.fn.now(8), false);

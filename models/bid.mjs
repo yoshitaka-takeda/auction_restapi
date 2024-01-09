@@ -39,6 +39,9 @@ class bid extends Model{
     }
 
     static get relationMappings() {
+        const users = import('./users.mjs');
+        const sysusers = import('./sysusers.mjs');
+
         return {
 
         };
