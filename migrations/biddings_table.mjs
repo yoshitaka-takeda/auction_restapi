@@ -14,8 +14,10 @@ let biddings_table = {
             t.increments('id').primary();
             t.integer('user_id',10).references('id').inTable('users');
             t.integer('item_id',10).references('id').inTable('items');
-            t.decimal('last_max_price',10,2);
-            t.decimal('bid_placed',10,2);
+            t.decimal('initial_offer',12,4).checkPositive();
+            t.decimal('last_max_price',12,4).checkPositive();
+            t.decimal('bid_placed',12,4).checkPositive();
+            t.check('?? >= ??','bid_placed','last_max_price');
             
             t.timestamps(true, __schema.fn.now(8), false);
         });
