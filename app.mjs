@@ -12,16 +12,19 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import pino from 'pino';
 
+import hvariables from "./globalservices/hvariables.mjs";
+
 dotenv.config();
 const __db = dbs;
 let app;
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const __publicPrefix = "public";
+const __publicPrefix = hvariables.publicDir;
 const __loggerPrefix = process.env.PINO_LOGDIR;
 if (fs.existsSync(__dirname + `/${__publicPrefix}`)) {
     console.log(`The directory /${__publicPrefix} exists`);
 } else {
     console.log(`The directory /${__publicPrefix} does NOT exist`);
+    fs.mkdirSync(__dirname + `/${__publicPrefix}`,{recursive: true});
 }
 
 if (fs.existsSync(__dirname + `/${__loggerPrefix}`)) {
