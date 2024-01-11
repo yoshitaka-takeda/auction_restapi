@@ -11,7 +11,6 @@ import path from 'node:path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import pino from 'pino';
-
 import hvariables from "./globalservices/hvariables.mjs";
 
 dotenv.config();
@@ -34,9 +33,13 @@ if (fs.existsSync(__dirname + `/${__loggerPrefix}`)) {
     fs.mkdirSync(__dirname + `/${__loggerPrefix}`,{recursive: true});
 }
 
+const d = new Date();
 try {
     app = fastify({
-        logger: true,
+        logger: {
+            level: 'info',
+            file: `./${__loggerPrefix}/${d.getFullYear()}-${(d.getMonth()+1 < 10)? '0' + (d.getMonth()+1):(d.getMonth()+1)}-${(d.getDate() < 10?'0'+d.getDate():d.getDate())}${ process.env.PINO_LOGFILE }`
+        },
         bodyLimit: 40 * 1024 * 1024,
         // status: { type: 'object', additionalProperties: true },
     });
@@ -67,6 +70,7 @@ try {
 
     app.listen({path: process.env.APP_HOST, port: process.env.APP_PORT}, function (err,address) {
         // console.info(address);
+        app.log.info(`Running as ${process.env.APP_HOST} on port: ${process.env.APP_PORT}`);
         if(err) {
             throw err;
         }

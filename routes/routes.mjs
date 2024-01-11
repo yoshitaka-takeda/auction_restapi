@@ -225,6 +225,9 @@ export async function routes(fastify=f, options=null) {
                             let finderLength = Object.keys(finder).length;
                             // finderLength = 2;
                             console.log(finder);
+
+                            const __user = await users.getTableName();
+                            console.log(__user);
                             if(finderLength === 0){
                                 let fetchdata = await users.create(__inputs);
                                 if(fetchdata.length > 0 ){
@@ -233,17 +236,17 @@ export async function routes(fastify=f, options=null) {
                                     });
                                 }else{
                                     reply.status(200).send({
-                                        message: `Cannot store data to ${await users.getTableName()}`
+                                        message: `Cannot store data to ${await users }`
                                     });
                                 }
                             }else{
                                 reply.status(200).send({
-                                    message: `Cannot store data to ${await users.getTableName()}; username, email already in-stored`
+                                    message: `Cannot store data to ${await users.tableName }; username, email already in-stored`
                                 });
                             }
                         }else{
                             reply.status(202).send({
-                                message: `Inputs is: ${inputs.length}, Halting ${await users.getTableName()} registration`
+                                message: `Inputs is: ${inputs.length}, Halting ${await users.tableName } registration`
                             });
                         }
                     }else{

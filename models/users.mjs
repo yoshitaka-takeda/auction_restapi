@@ -23,6 +23,10 @@ class users extends Model {
         return process.env.USERS_TABLE;
     }
 
+    getTableName() {
+        return this.tableName;
+    }
+
     async findById(id) {
         let data;
         data = orm.__knex.select('*')

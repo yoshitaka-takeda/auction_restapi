@@ -71,3 +71,6 @@ globalservices/
 
 # ignore zip files --omittable--
 *.zip
+
+# Not showing these
+package-lock.json
